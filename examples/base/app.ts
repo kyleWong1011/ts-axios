@@ -5,6 +5,14 @@ import axios from '../../src'
 axios({
   method: 'get',
   url: '/base/get',
+  params: {}
+})
+
+// 参数为数组
+// http://localhost:8080/base/get?[]=bar&[]=baz
+axios({
+  method: 'get',
+  url: '/base/get',
   params: {
     foo: ['bar', 'baz']
   }

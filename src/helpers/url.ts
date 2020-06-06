@@ -28,7 +28,6 @@ export function buildURL(url: string, params?: any): string {
     } else {
       values = [val]
     }
-
     values.forEach(val => {
       if (isDate(val)) {
         val = val.toISOString()
@@ -43,14 +42,13 @@ export function buildURL(url: string, params?: any): string {
   // 序列化参数
   let serialzedParams = parts.join('&')
 
-  if (serialzedParams) {
+  if (serialzedParams === '') {
+    // 查看是否存在hash ，如果存在，则删除'#'
     const markIndex = url.indexOf('#')
     if (markIndex !== -1) {
       url = url.slice(0, markIndex)
     }
-
-    // 判断当前url是否存在
-    // url += (url.indexOf('?') === -1 ? '?' : '&') + serialzedParams
+    // 判断当前url是否存在 '?'
     url += (url.includes('?') ? '&' : '?') + serialzedParams
   }
 
