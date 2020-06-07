@@ -20,10 +20,19 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     // 这里可以保证运行时 url 是有值的
     request.open(method.toUpperCase(), url!, true)
 
+    //  XMLHttpRequest 的readyState 属性发生改变时触发 readystatechange 事件的时候被调用。
     request.onreadystatechange = () => {
+      // 0	UNSENT	代理被创建，但尚未调用 open() 方法。
+      // 1	OPENED	open() 方法已经被调用。
+      // 2	HEADERS_RECEIVED	send() 方法已经被调用，并且头部和状态已经可获得。
+      // 3	LOADING	下载中； responseText 属性已经包含部分数据。
+      // 4	DONE	下载操作已完成。
       if (request.readyState !== 4) {
         return
       }
+
+      // 在请求完成前，status的值为0。
+      // 网络错误或者超时错误的时候request.status是0
       if (request.status === 0) {
         return
       }
@@ -39,7 +48,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         config,
         request
       }
-      resolve(response)
+      handleResponse(response)
     }
 
     // 处理网络错误
@@ -62,5 +71,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     })
 
     request.send(data)
+
+    function handleResponse(response: AxiosResponse): void {
+      if (response.status >= 200 && response.status < 300) {
+        resolve(response)
+      } else {
+        reject(new Error(`Request filed with status code ${response.status}`))
+      }
+    }
   })
 }
