@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosPromise } from './types'
+import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
 import { parseHeaders } from './helpers/headers'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -11,17 +11,22 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       request.responseType = responseType
     }
 
+    // 第三个参数为 async 是否是异步请求
+    // 这里可以保证运行时 url 是有值的
     request.open(method.toUpperCase(), url!, true)
 
-    request.onreadystatechange = function handleLoad() {
+    request.onreadystatechange = () => {
       if (request.readyState !== 4) {
+        return
+      }
+      if (request.status === 0) {
         return
       }
 
       const responseHeaders = parseHeaders(request.getAllResponseHeaders())
       const responseData = responseType !== 'text' ? request.response : request.responseText
 
-      const response: AxiosPromise = {
+      const response: AxiosResponse = {
         data: responseData,
         status: request.status,
         statusText: request.statusText,

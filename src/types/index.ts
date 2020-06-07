@@ -26,7 +26,7 @@ export interface AxiosRequestConfig {
 
 export interface AxiosResponse {
   data: any
-  status: string
+  status: number
   statusText: string
   headers: any
   config: AxiosRequestConfig
