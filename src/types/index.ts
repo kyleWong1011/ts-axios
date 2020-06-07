@@ -8,7 +8,7 @@ export type Method =
   | 'options'
   | 'OPTIONS'
   | 'post'
-  | ' POST'
+  | 'POST'
   | 'patch'
   | 'PATCH'
   | 'put'
